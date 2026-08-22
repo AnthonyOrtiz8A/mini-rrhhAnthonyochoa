@@ -4,6 +4,7 @@ import type { Employee } from '../types';
 interface EmployeeCardProps {
   employee: Employee;
   onSelect?: (employee: Employee) => void;
+  onToggleStatus?: (employee: Employee) => void;
 }
 
 const statusConfig = {
@@ -12,7 +13,7 @@ const statusConfig = {
   on_leave: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'En permiso' },
 };
 
-function EmployeeCard({ employee, onSelect }: EmployeeCardProps) {
+function EmployeeCard({ employee, onSelect, onToggleStatus }: EmployeeCardProps) {
   const { name, position, department, status, avatarUrl } = employee;
   const statusStyle = statusConfig[status];
 
@@ -27,9 +28,7 @@ function EmployeeCard({ employee, onSelect }: EmployeeCardProps) {
       `}
     >
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center
-                        justify-center overflow-hidden text-blue-700
-                        font-semibold text-lg flex-shrink-0">
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden text-blue-700 font-semibold text-lg flex-shrink-0">
           {avatarUrl
             ? <img src={avatarUrl} alt={`Avatar de ${name}`} className="w-full h-full object-cover" />
             : name.charAt(0).toUpperCase()
@@ -42,12 +41,14 @@ function EmployeeCard({ employee, onSelect }: EmployeeCardProps) {
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1
-                         rounded-full font-medium truncate">
+        <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium truncate">
           {department}
         </span>
-        <span className={`text-xs px-2.5 py-1 rounded-full font-medium
-                          ${statusStyle.bg} ${statusStyle.text}`}>
+        <span
+          onClick={(e) => { e.stopPropagation(); onToggleStatus?.(employee); }}
+          title={onToggleStatus ? 'Clic para cambiar el estado' : undefined}
+          className={`text-xs px-2.5 py-1 rounded-full font-medium ${statusStyle.bg} ${statusStyle.text} ${onToggleStatus ? 'cursor-pointer hover:opacity-75' : ''}`}
+        >
           {statusStyle.label}
         </span>
       </div>

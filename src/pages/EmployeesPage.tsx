@@ -1,24 +1,30 @@
 // src/pages/EmployeesPage.tsx
 import { useState, useEffect, useCallback } from 'react';
 import type { Employee, Department, EmployeeStatus, EmployeeRole } from '../types';
-import { mockEmployees } from '../utils/mockData';
+import { useEmployeeStore } from '../store/employeeStore';
 import EmployeeCard from '../components/EmployeeCard';
 import StatsBadge from '../components/StatsBadge';
 import FormField from '../components/FormField';
 
 const formFieldClass = 'w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent';
 
+// Ciclo de estados al hacer clic en la insignia de una tarjeta
+const nextStatus: Record<EmployeeStatus, EmployeeStatus> = {
+  active: 'on_leave',
+  on_leave: 'inactive',
+  inactive: 'active',
+};
+
 function EmployeesPage() {
-  // Estado de la lista completa (simulando datos del servidor)
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Estado global del servidor (empleados) — viene del store, no de useState local
+  const { employees, isLoading: loading, error, fetchEmployees, addEmployee, updateEmployee, deleteEmployee } = useEmployeeStore();
 
   // Estado de los filtros
   const [search, setSearch] = useState<string>('');
   const [selectedDepartment, setSelectedDepartment] = useState<Department | ''>('');
   const [selectedStatus, setSelectedStatus] = useState<EmployeeStatus | ''>('');
 
-  // Estado del formulario de nuevo empleado
+  // Añade este estado al inicio del componente:
   const [showForm, setShowForm] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>('');
   const [newEmail, setNewEmail] = useState<string>('');
@@ -31,25 +37,18 @@ function EmployeesPage() {
   const [newPhone, setNewPhone] = useState<string>('');
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>('');
 
-  // Simular carga de datos (en clases siguientes conectaremos la API real)
+  // Cargar empleados desde el store al montar la página
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setEmployees(mockEmployees);
-      setLoading(false);
-    }, 800); // Simula latencia de red
-
-    return () => clearTimeout(timer); // Cleanup: cancelar si el componente se desmonta
-  }, []);
+    fetchEmployees();
+  }, [fetchEmployees]);
 
   // Filtrar empleados según los criterios activos
   const filteredEmployees = employees.filter(emp => {
     const matchesSearch = emp.name.toLowerCase().includes(search.toLowerCase()) ||
                            emp.email.toLowerCase().includes(search.toLowerCase()) ||
                            emp.position.toLowerCase().includes(search.toLowerCase());
-
     const matchesDepartment = !selectedDepartment || emp.department === selectedDepartment;
     const matchesStatus = !selectedStatus || emp.status === selectedStatus;
-
     return matchesSearch && matchesDepartment && matchesStatus;
   });
 
@@ -66,15 +65,19 @@ function EmployeesPage() {
 
   const handleDeleteEmployee = useCallback((id: number) => {
     if (!confirm('¿Estás seguro de eliminar este empleado?')) return;
-    setEmployees(prev => prev.filter(emp => emp.id !== id));
-  }, []);
+    deleteEmployee(id);
+  }, [deleteEmployee]);
+
+  // Actualiza el estado de un empleado (ciclo Activo → En permiso → Inactivo → Activo)
+  const handleToggleStatus = useCallback((employee: Employee) => {
+    updateEmployee(employee.id, { status: nextStatus[employee.status] });
+  }, [updateEmployee]);
 
   // Handler para agregar empleado
   const handleAddEmployee = useCallback(() => {
     if (!newName.trim() || !newEmail.trim() || !newPosition.trim() || !newHireDate) return;
 
-    const newEmployee: Employee = {
-      id: Date.now(), // ID temporal
+    const added = addEmployee({
       name: newName.trim(),
       email: newEmail.trim(),
       position: newPosition.trim(),
@@ -85,9 +88,11 @@ function EmployeesPage() {
       role: newRole,
       ...(newPhone.trim() && { phone: newPhone.trim() }),
       ...(newAvatarUrl.trim() && { avatarUrl: newAvatarUrl.trim() }),
-    };
+    });
 
-    setEmployees(prev => [...prev, newEmployee]);
+    // Si el email ya estaba en uso, el formulario queda abierto para que se vea el error
+    if (!added) return;
+
     setNewName('');
     setNewEmail('');
     setNewPosition('');
@@ -99,7 +104,8 @@ function EmployeesPage() {
     setNewPhone('');
     setNewAvatarUrl('');
     setShowForm(false);
-  }, [newName, newEmail, newPosition, newDepartment, newSalary, newHireDate, newStatus, newRole, newPhone, newAvatarUrl]);
+  }, [addEmployee, newName, newEmail, newPosition, newDepartment, newSalary,
+      newHireDate, newStatus, newRole, newPhone, newAvatarUrl]);
 
   const departments: Department[] = ['Tecnología', 'Recursos Humanos', 'Finanzas', 'Operaciones', 'Ventas'];
   const statuses: EmployeeStatus[] = ['active', 'inactive', 'on_leave'];
@@ -127,8 +133,7 @@ function EmployeesPage() {
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-brand-800 hover:bg-brand-700 text-white
-                     rounded-lg text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-brand-800 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors"
         >
           + Agregar empleado
         </button>
@@ -145,6 +150,13 @@ function EmployeesPage() {
       {showForm && (
         <div className="p-4 mb-6 bg-white rounded-lg border border-blue-200">
           <p className="mb-3 font-semibold text-slate-900">Nuevo empleado</p>
+
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-4">
             <FormField label="Nombre *">
               <input
@@ -272,8 +284,7 @@ function EmployeesPage() {
       )}
 
       {/* Barra de filtros */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 mb-6
-                      flex flex-wrap items-end gap-3">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 mb-6 flex flex-wrap items-end gap-3">
         {/* Búsqueda por texto */}
         <FormField label="Buscar" className="flex-1 min-w-[220px]">
           <input
@@ -317,8 +328,7 @@ function EmployeesPage() {
         {(search || selectedDepartment || selectedStatus) && (
           <button
             onClick={() => { setSearch(''); setSelectedDepartment(''); setSelectedStatus(''); }}
-            className="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-600
-                       rounded-lg text-sm transition-colors"
+            className="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg text-sm transition-colors"
           >
             Limpiar filtros
           </button>
@@ -341,24 +351,21 @@ function EmployeesPage() {
 
       {/* Lista de empleados */}
       {!loading && filteredEmployees.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-                        xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredEmployees.map(employee => (
             <div key={employee.id} className="relative">
               <button
                 onClick={() => handleDeleteEmployee(employee.id)}
                 aria-label="Eliminar empleado"
                 title="Eliminar empleado"
-                className="absolute -top-2.5 -right-2.5 z-10 w-6 h-6
-                           rounded-full border-2 border-white bg-red-500
-                           text-white cursor-pointer text-sm leading-5
-                           shadow-md"
+                className="absolute -top-2.5 -right-2.5 z-10 w-6 h-6 rounded-full border-2 border-white bg-red-500 text-white cursor-pointer text-sm leading-5 shadow-md"
               >
                 ×
               </button>
               <EmployeeCard
                 employee={employee}
                 onSelect={handleSelectEmployee}
+                onToggleStatus={handleToggleStatus}
               />
             </div>
           ))}
