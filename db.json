@@ -168,18 +168,6 @@
       "hireDate": "2016-10-14",
       "status": "inactive",
       "role": "admin"
-    },
-    {
-      "name": "a",
-      "email": "a",
-      "position": "a",
-      "department": "Tecnología",
-      "salary": 5000,
-      "hireDate": "2005-08-18",
-      "status": "active",
-      "role": "admin",
-      "phone": "a",
-      "id": 16
     }
   ]
 }
