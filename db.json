@@ -1,0 +1,173 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Ana García",
+      "email": "ana.garcia@empresa.com",
+      "position": "Desarrolladora Frontend",
+      "department": "Tecnología",
+      "salary": 8500,
+      "hireDate": "2022-03-15",
+      "status": "active",
+      "role": "employee",
+      "avatarUrl": "https://i.pravatar.cc/64?img=1"
+    },
+    {
+      "id": 2,
+      "name": "Carlos Martínez",
+      "email": "carlos.martinez@empresa.com",
+      "position": "Gerente de RRHH",
+      "department": "Recursos Humanos",
+      "salary": 12000,
+      "hireDate": "2019-07-01",
+      "status": "active",
+      "role": "hr"
+    },
+    {
+      "id": 3,
+      "name": "María López",
+      "email": "maria.lopez@empresa.com",
+      "position": "Contadora Senior",
+      "department": "Finanzas",
+      "salary": 9500,
+      "hireDate": "2021-01-20",
+      "status": "on_leave",
+      "role": "employee"
+    },
+    {
+      "id": 4,
+      "name": "Roberto Silva",
+      "email": "roberto.silva@empresa.com",
+      "position": "Administrador del Sistema",
+      "department": "Tecnología",
+      "salary": 15000,
+      "hireDate": "2018-05-10",
+      "status": "inactive",
+      "role": "admin"
+    },
+    {
+      "id": 5,
+      "name": "Anthony Ochoa",
+      "email": "anthonyochoa@empresa.com",
+      "position": "Inegeniero en Sistemas",
+      "department": "Tecnología",
+      "salary": 18000,
+      "hireDate": "2026-01-01",
+      "status": "active",
+      "role": "admin",
+      "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqceZtleFhNiobIhC0SCVV4NGtUN9bZ2gJqJapMYvI_A&s=10"
+    },
+    {
+      "id": 6,
+      "name": "Yarissa Hernandez",
+      "email": "yarissahernandez@empresa.com",
+      "position": "Inegeniera en Sistemas",
+      "department": "Tecnología",
+      "salary": 20000,
+      "hireDate": "2026-01-02",
+      "status": "active",
+      "role": "admin",
+      "avatarUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVs8tBLpM7XpEl_FMmD-pwhap62KJ3VVKeeLXslWwIm3PkxJAHmeHX5ErO&s=10"
+    },
+    {
+      "id": 7,
+      "name": "Byron Flores",
+      "email": "byron.flores@empresa.com",
+      "position": "Desarrollador Backend",
+      "department": "Tecnología",
+      "salary": 8900,
+      "hireDate": "2023-02-11",
+      "status": "active",
+      "role": "employee"
+    },
+    {
+      "id": 8,
+      "name": "Daniela Ramos",
+      "email": "daniela.ramos@empresa.com",
+      "position": "Especialista de Reclutamiento",
+      "department": "Recursos Humanos",
+      "salary": 7800,
+      "hireDate": "2022-06-04",
+      "status": "active",
+      "role": "hr"
+    },
+    {
+      "id": 9,
+      "name": "Fernando Castillo",
+      "email": "fernando.castillo@empresa.com",
+      "position": "Gerente Financiero",
+      "department": "Finanzas",
+      "salary": 16500,
+      "hireDate": "2020-09-23",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": 10,
+      "name": "Gabriela Pérez",
+      "email": "gabriela.perez@empresa.com",
+      "position": "Analista de Operaciones",
+      "department": "Operaciones",
+      "salary": 7200,
+      "hireDate": "2021-11-30",
+      "status": "on_leave",
+      "role": "employee",
+      "avatarUrl": "https://content.nationalgeographic.com.es/medio/2020/09/21/mientras-tanto-en-la-espana-vacia_bbc40804_2000x2000.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Héctor Morales",
+      "email": "hector.morales@empresa.com",
+      "position": "Coordinador de RRHH",
+      "department": "Ventas",
+      "salary": 9100,
+      "hireDate": "2019-04-17",
+      "status": "on_leave",
+      "role": "hr"
+    },
+    {
+      "id": 12,
+      "name": "Ingrid Cabrera",
+      "email": "ingrid.cabrera@empresa.com",
+      "position": "Líder Técnica",
+      "department": "Tecnología",
+      "salary": 17500,
+      "hireDate": "2018-12-05",
+      "status": "on_leave",
+      "role": "admin"
+    },
+    {
+      "id": 13,
+      "name": "Javier Cordón",
+      "email": "javier.cordon@empresa.com",
+      "position": "Auxiliar de Recursos Humanos",
+      "department": "Recursos Humanos",
+      "salary": 6500,
+      "hireDate": "2020-03-09",
+      "status": "inactive",
+      "role": "employee"
+    },
+    {
+      "id": 14,
+      "name": "Karla Zamora",
+      "email": "karla.zamora@empresa.com",
+      "position": "Coordinadora de Finanzas",
+      "department": "Finanzas",
+      "salary": 9800,
+      "hireDate": "2017-08-22",
+      "status": "inactive",
+      "role": "hr"
+    },
+    {
+      "id": 15,
+      "name": "Luis Aguilar",
+      "email": "luis.aguilar@empresa.com",
+      "position": "Gerente de Operaciones",
+      "department": "Operaciones",
+      "salary": 14200,
+      "hireDate": "2016-10-14",
+      "status": "inactive",
+      "role": "admin"
+    }
+  ]
+}
